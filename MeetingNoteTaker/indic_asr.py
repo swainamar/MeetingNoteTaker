@@ -79,7 +79,7 @@ def _load_model():
         # (trust_remote_code). Pin it to a reviewed commit with INDIC_ASR_REVISION.
         revision = os.environ.get("INDIC_ASR_REVISION") or None
         print(f"Loading IndicConformer model ({repo}"
-              f"{'@' + revision if revision else ''})... (first run downloads ~600 MB)")
+              f"{'@' + revision if revision else ''})... (first run downloads about 2.5 GB)")
         try:
             _MODEL = AutoModel.from_pretrained(repo, trust_remote_code=True,
                                                token=token, revision=revision)

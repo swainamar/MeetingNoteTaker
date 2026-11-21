@@ -16,5 +16,5 @@ if errorlevel 1 (
 
 echo.
 echo Done! Open Meeting Note-Taker - Settings - Audio and AI, and choose "Odia (or)" as Language.
-echo The first Odia recording will download the ~600 MB IndicConformer model once, then work offline.
+echo The first Odia recording will download the IndicConformer model (about 2.5 GB) once, then work offline.
 pause

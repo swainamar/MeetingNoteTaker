@@ -333,34 +333,42 @@ class App:
         top = ttk.Frame(parent, style="Top.TFrame", padding=(24, 14, 24, 14))
         top.pack(fill="x")
         tk.Frame(parent, bg=c["border"], height=1).pack(fill="x")
+        # Controls are packed first so they keep their space; the page title gives way.
+        right = ttk.Frame(top, style="Top.TFrame")
+        right.pack(side="right")
         left = ttk.Frame(top, style="Top.TFrame")
-        left.pack(side="left")
+        left.pack(side="left", fill="x", expand=True)
         self.page_title = ttk.Label(left, text="", style="Top.H1.TLabel")
         self.page_title.pack(anchor="w")
         self.page_sub = ttk.Label(left, text="", style="Top.Muted.TLabel")
         self.page_sub.pack(anchor="w")
 
-        right = ttk.Frame(top, style="Top.TFrame")
-        right.pack(side="right")
         self.pill = theme.Pill(right, "Idle")
         self.pill.pack(side="left", padx=(0, 10))
-        self.timer = ttk.Label(right, text="", style="Top.H2.TLabel", width=9)
-        self.timer.pack(side="left", padx=(0, 10))
+        # Idle: mode + Start.  Recording: timer + Pause / Stop / Pin.  Only one set is shown.
+        self.idle_box = ttk.Frame(right, style="Top.TFrame")
+        self.rec_box = ttk.Frame(right, style="Top.TFrame")
         self.mode_var = tk.StringVar(value=MODES[1] if self.s.get("screen_record") else MODES[0])
-        self.cmb_mode = ttk.Combobox(right, textvariable=self.mode_var, values=MODES, state="readonly",
-                                     width=16)
+        self.cmb_mode = ttk.Combobox(self.idle_box, textvariable=self.mode_var, values=MODES,
+                                     state="readonly", width=16)
         self.cmb_mode.bind("<<ComboboxSelected>>", lambda _e: self._on_mode_change())
         self.cmb_mode.pack(side="left", padx=(0, 8))
-        self.btn_start = ttk.Button(right, text="●  Start", style="Accent.TButton",
+        self.btn_start = ttk.Button(self.idle_box, text="●  Start", style="Accent.TButton",
                                     command=lambda: self.start(auto=False))
-        self.btn_pause = ttk.Button(right, text="❚❚  Pause", command=self.toggle_pause)
-        self.btn_stop = ttk.Button(right, text="■  Stop", style="Danger.TButton",
+        self.btn_start.pack(side="left", padx=3)
+        self.timer = ttk.Label(self.rec_box, text="", style="Top.H2.TLabel", width=8)
+        self.timer.pack(side="left", padx=(0, 6))
+        self.btn_pause = ttk.Button(self.rec_box, text="❚❚  Pause", command=self.toggle_pause, width=-9)
+        self.btn_stop = ttk.Button(self.rec_box, text="■  Stop", style="Danger.TButton", width=-7,
                                    command=lambda: self.stop("stopped by you"))
-        self.btn_pin = ttk.Button(right, text="★  Pin", command=self.pin_moment)
-        self.mic_on = tk.BooleanVar(value=self.s.get("mic_on", True))
-        self.btn_mic = ttk.Button(right, text="", command=self.toggle_mic, width=12)
-        for b in (self.btn_start, self.btn_pause, self.btn_stop, self.btn_pin, self.btn_mic):
+        self.btn_pin = ttk.Button(self.rec_box, text="★  Pin", command=self.pin_moment, width=-6)
+        for b in (self.btn_pause, self.btn_stop, self.btn_pin):
             b.pack(side="left", padx=3)
+        self.mic_on = tk.BooleanVar(value=self.s.get("mic_on", True))
+        self.btn_mic = ttk.Button(right, text="", command=self.toggle_mic, width=-10)
+        self.idle_box.pack(side="left")
+        self.btn_mic.pack(side="left", padx=3)
+        self._controls_rec = False
 
     def _kpi(self, parent, col, label):
         outer, inner = theme.card(parent, padding=(18, 14))
@@ -428,7 +436,7 @@ class App:
                                      command=self.choose_target)
         self.btn_target.pack(side="left", padx=(10, 0))
         self.ask_var = tk.BooleanVar(value=self.s.get("screen_ask", True))
-        ttk.Checkbutton(s, text="Ask which screen or area each time the screen is recorded",
+        ttk.Checkbutton(s, text="Ask which screen or area each time",
                         variable=self.ask_var, style="Card.TCheckbutton", command=self._on_ask_toggle
                         ).grid(row=8, column=1, columnspan=2, sticky="w", pady=(2, 2))
         self.auto_var = tk.BooleanVar(value=self.s.get("auto_record", True))
@@ -482,10 +490,9 @@ class App:
         cmb.pack(side="left")
         cmb.bind("<<ComboboxSelected>>", lambda _e: self._fill_actions())
         self.act_query = tk.StringVar()
-        e = ttk.Entry(bar, textvariable=self.act_query, width=36)
+        e = ttk.Entry(bar, textvariable=self.act_query, width=30)
         e.pack(side="left", padx=8)
         e.bind("<KeyRelease>", lambda _e: self._fill_actions())
-        ttk.Label(bar, text="Filter by action, owner or meeting", style="Muted.TLabel").pack(side="left")
         ttk.Button(bar, text="Export CSV", command=self._export_actions).pack(side="right")
         ttk.Button(bar, text="Open meeting", command=self._open_action_meeting).pack(side="right", padx=6)
         ttk.Button(bar, text="✓  Mark done / open", style="Accent.TButton",
@@ -643,7 +650,8 @@ class App:
             shown += 1
         total_open = sum(1 for i in self.action_items if not i["done"])
         self.lbl_actions.config(text=f"{shown} shown · {total_open} open · "
-                                     f"{len(self.action_items)} total.  Double-click to tick off.")
+                                     f"{len(self.action_items)} total.  Type above to filter by action, owner or meeting; "
+                                     "double-click to tick off.")
 
     def _selected_actions(self):
         return [self.action_items[int(i)] for i in self.act_tree.selection()]
@@ -886,7 +894,7 @@ class App:
         if not self.s.get("screen_record"):
             txt = "Not recorded (audio only)"
         elif self.s.get("screen_ask", True):
-            txt = "Ask each time  ·  last: " + screen_picker.describe(self._saved_target())
+            txt = "Asks each time"
         else:
             txt = screen_picker.describe(self._saved_target())
         self.lbl_target.config(text=txt)
@@ -940,11 +948,10 @@ class App:
                     if not self.s.get("screen_record"):
                         self.mode_var.set(MODES[1])
                         self._on_mode_change()
-            p = screen_picker.ScreenPicker(self.root, screens, self._saved_target(), done,
-                                           timeout_s=10 ** 6, intro="Choose what to record when the "
+            screen_picker.ScreenPicker(self.root, screens, self._saved_target(), done,
+                                           timeout_s=None, intro="Choose what to record when the "
                                            "screen is recorded.",
                                            exclude_capture=self.s.get("exclude_capture", False))
-            p.lbl_count.config(text="")
         self._with_screens(show)
 
     def _ask_screen_for(self, rec):
@@ -1188,6 +1195,11 @@ class App:
         self.timer.config(text=timer)
 
         active = bool(rec) and not self.stopping
+        want_rec = bool(rec or self.stopping)
+        if want_rec != self._controls_rec:
+            self._controls_rec = want_rec
+            (self.idle_box if want_rec else self.rec_box).pack_forget()
+            (self.rec_box if want_rec else self.idle_box).pack(side="left", before=self.btn_mic)
         self.btn_start.state(["disabled"] if (rec or self.stopping) else ["!disabled"])
         self.cmb_mode.state(["disabled"] if (rec or self.stopping) else ["!disabled", "readonly"])
         for b in (self.btn_pause, self.btn_stop, self.btn_pin):

@@ -181,14 +181,16 @@ class ScreenPicker:
     """on_done(target_or_None, remember: bool). None = audio only."""
 
     def __init__(self, parent, screens: list[dict], last: dict | None, on_done,
-                 timeout_s: int = 20, exclude_capture: bool = False,
+                 timeout_s: int | None = 20, exclude_capture: bool = False,
                  intro: str = "Audio is already recording. Pick a screen, or select an area on it."):
         import settings as cfg
         self.on_done, self.done = on_done, False
         self.screens = screens
         self.default = last if last and any(s["index"] == last.get("monitor") for s in screens) \
             else {"monitor": screens[0]["index"], "area": None}
-        self.remaining = timeout_s
+        self.timeout_s = timeout_s            # None = no countdown (choosing a default)
+        self.remaining = timeout_s or 0
+        self.selecting = False
         self.w = w = tk.Toplevel(parent)
         w.title("What should be recorded?")
         w.attributes("-topmost", True)
@@ -245,25 +247,28 @@ class ScreenPicker:
         self._tick()
 
     def _tick(self):
-        if self.done:
+        if self.done or self.timeout_s is None:
             return
-        if self.remaining <= 0:
+        if self.selecting:                  # countdown paused while an area is being selected
+            self.lbl_count.config(text="")
+        elif self.remaining <= 0:
             self._finish(self.default)
             return
-        self.lbl_count.config(text=f"No choice in {self.remaining} s → recording "
-                                   f"{describe(self.default, self.screens)}")
-        self.remaining -= 1
+        else:
+            self.lbl_count.config(text=f"No choice in {self.remaining} s → recording "
+                                       f"{describe(self.default, self.screens)}")
+            self.remaining -= 1
         self.w.after(1000, self._tick)
 
     def _select_area(self, screen):
-        self.remaining = 10 ** 9            # stop the countdown while selecting
+        self.selecting = True
         self.lbl_count.config(text="")
 
         def got(res):
             kind, area = res
             if kind == "cancel":
-                self.remaining = 20
-                self._tick()
+                self.remaining = self.timeout_s or 0      # restart the countdown
+                self.selecting = False
                 return
             self._finish({"monitor": screen["index"], "area": area})
         AreaSelector(self.w, screen, got)

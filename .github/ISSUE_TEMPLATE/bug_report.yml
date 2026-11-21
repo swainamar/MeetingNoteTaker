@@ -1,0 +1,45 @@
+name: Bug report
+description: Something doesn't work as expected
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting! **Do not attach recordings, transcripts, voice profiles or the audit log** - they contain other people's personal data.
+  - type: input
+    id: version
+    attributes:
+      label: App version
+      description: Shown in the window title, e.g. 2.1
+    validations:
+      required: true
+  - type: dropdown
+    id: windows
+    attributes:
+      label: Windows version
+      options: [Windows 11, Windows 10, Other]
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options: [Installation, Recording / auto-record, Screen recording, Transcription / languages, Speakers, Notes / action items, UI, Other]
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: log
+    attributes:
+      label: Log lines
+      description: Relevant lines from MeetingNoteTaker\meetings\notetaker.log (remove names and meeting titles).
+      render: text
+  - type: input
+    id: hardware
+    attributes:
+      label: GPU / monitors / scaling
+      placeholder: e.g. NVIDIA RTX 3060, 3 monitors, 200 % scaling

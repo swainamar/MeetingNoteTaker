@@ -12,3 +12,6 @@ __pycache__/
 *.mp4
 *.mkv
 .env
+# Voice profiles are biometric data
+MeetingNoteTaker/voices/
+*.npy
