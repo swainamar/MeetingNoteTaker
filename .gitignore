@@ -1,0 +1,14 @@
+# Recordings, transcripts, audit log and runtime state - personal data, never publish
+MeetingNoteTaker/meetings/
+# Speaker models download automatically on first use (hash-checked)
+MeetingNoteTaker/models/
+# Per-PC install markers
+MeetingNoteTaker/.installed
+MeetingNoteTaker/.shortcuts_created
+__pycache__/
+*.pyc
+*.bak*
+*.wav
+*.mp4
+*.mkv
+.env

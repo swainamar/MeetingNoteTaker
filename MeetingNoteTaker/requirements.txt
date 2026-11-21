@@ -1,0 +1,9 @@
+# Exact versions (tested on Python 3.11 for Windows). No new dependencies added in V1.5.
+# Upgrade on purpose: change a version here, then run  pip-audit -r requirements.txt
+soundcard==0.4.6
+soundfile==0.14.0
+numpy==1.26.4          # soundcard on Windows breaks with numpy 2.x
+faster-whisper==1.2.1
+anthropic==2.3.0
+sherpa-onnx==2.0.1      # speaker separation (who said what)
+imageio-ffmpeg==0.6.0   # FFmpeg for screen recording (used only if FFmpeg is not already installed)

@@ -1,0 +1,4 @@
+# Custom Vocabulary / Glossary (one term per line or comma-separated)
+# Lines starting with # are ignored.
+# Add colleague names, client names, product names, and acronyms so Whisper
+# transcribes them accurately (e.g., OCI, Azure, Entra ID, Boomi, ITIL, Kubernetes).
