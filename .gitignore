@@ -15,3 +15,11 @@ __pycache__/
 # Voice profiles are biometric data
 MeetingNoteTaker/voices/
 *.npy
+# Portable build output (build/build.ps1)
+MeetingNoteTaker/runtime/
+MeetingNoteTaker.exe
+dist/
+# Per-PC settings
+MeetingNoteTaker/notetaker_settings.json
+MeetingNoteTaker/voice_prompt_settings.json
+build/out/

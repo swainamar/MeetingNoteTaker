@@ -349,7 +349,7 @@ class SettingsDialog:
         r += 1
         ttk.Label(f, text=("Captures everything on that screen, including notifications. "
                            "About 0.2-0.7 GB per hour." if has_ff else
-                           "Needs FFmpeg: run Install.bat (or 'winget install ffmpeg')."),
+                           "Needs FFmpeg: download the portable ZIP again (or 'winget install ffmpeg')."),
                   style="Muted.TLabel").grid(row=r, column=0, columnspan=2, sticky="w")
 
         r += 1

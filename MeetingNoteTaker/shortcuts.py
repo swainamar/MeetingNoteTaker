@@ -20,10 +20,21 @@ NAME = "Meeting Note-Taker"
 NO_WINDOW = getattr(subprocess, "CREATE_NO_WINDOW", 0)
 
 
+LAUNCHER = HERE.parent / "MeetingNoteTaker.exe"     # portable build
+
+
 def _pythonw() -> str:
     exe = Path(sys.executable)
     w = exe.with_name("pythonw.exe")
     return str(w if w.exists() else exe)
+
+
+def _target_and_args(args: str) -> tuple[str, str, str]:
+    """(target, arguments, icon): MeetingNoteTaker.exe when present (portable build),
+    else pythonw + app.py."""
+    if LAUNCHER.exists():
+        return str(LAUNCHER), args.strip(), f"{LAUNCHER},0"
+    return _pythonw(), f'"{HERE / "app.py"}" {args}'.strip(), f"{ICON},0"
 
 
 def _special(folder: str) -> Path:
@@ -43,12 +54,13 @@ def _ps_quote(s: str) -> str:
 
 def create(lnk: Path, args: str = "", description: str = "") -> Path:
     lnk.parent.mkdir(parents=True, exist_ok=True)
+    target, arguments, icon = _target_and_args(args)
     script = (
         "$s = (New-Object -ComObject WScript.Shell).CreateShortcut(" + _ps_quote(lnk) + ");"
-        "$s.TargetPath = " + _ps_quote(_pythonw()) + ";"
-        "$s.Arguments = " + _ps_quote(f'"{HERE / "app.py"}" {args}'.strip()) + ";"
+        "$s.TargetPath = " + _ps_quote(target) + ";"
+        "$s.Arguments = " + _ps_quote(arguments) + ";"
         "$s.WorkingDirectory = " + _ps_quote(HERE) + ";"
-        "$s.IconLocation = " + _ps_quote(f"{ICON},0") + ";"
+        "$s.IconLocation = " + _ps_quote(icon) + ";"
         "$s.Description = " + _ps_quote(description or NAME) + ";"
         "$s.Save()")
     r = subprocess.run(["powershell.exe", "-NoProfile", "-NonInteractive", "-Command", script],

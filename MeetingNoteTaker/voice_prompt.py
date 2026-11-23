@@ -257,7 +257,7 @@ class App:
         self.history = load_history()
 
         self.root = root = tk.Tk()
-        root.title("Voice to Prompt 2.1")
+        root.title("Voice to Prompt 2.2")
         try:
             root.iconbitmap(default=str(HERE / "assets" / "logo.ico"))
         except tk.TclError:

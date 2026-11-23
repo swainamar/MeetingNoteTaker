@@ -41,7 +41,7 @@ import ui_dialogs as ui
 from teams_autorecorder import (END_AFTER_S, MEETING_APPS, MIN_KEEP_S, START_AFTER_S,
                                 Processor, Recorder, meeting_in_call)
 
-VERSION = "2.1"
+VERSION = "2.2"
 APP_NAME = "Meeting Note-Taker"
 DEFAULT_TITLES = ("", "Meeting")
 MODES = ("🎙  Audio only", "🖥  Audio + screen")
@@ -236,7 +236,9 @@ class App:
         self.ui_q = queue.Queue()   # work handed from threads to the Tk thread
 
         theme.enable_dpi()          # crisp text on high-DPI (e.g. 200%) screens
-        if sys.platform == "win32":  # own taskbar icon instead of Python's
+        # Own taskbar icon instead of Python's. Started from MeetingNoteTaker.exe the exe already
+        # owns the window, and an explicit ID would stop a pinned exe from matching the window.
+        if sys.platform == "win32" and Path(sys.executable).stem.lower() != "meetingnotetaker":
             try:
                 import ctypes
                 ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("MeetingNoteTaker.Enterprise")
@@ -905,7 +907,7 @@ class App:
             self.s["screen_record"] = False
             self.mode_var.set(MODES[0])
             messagebox.showwarning(APP_NAME, "Screen recording needs FFmpeg. "
-                                             "Run Install.bat in the MeetingNoteTaker folder.",
+                                             "Download the portable ZIP again (FFmpeg is included in it).",
                                    parent=self.root)
         cfg.save_settings(self.s)
         self._update_target_label()

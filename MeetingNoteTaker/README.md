@@ -1,8 +1,13 @@
-# Meeting Note-Taker - app folder
+# Meeting Note-Taker - supporting files
 
-This folder holds the app. Start it with **`Meeting Note-Taker.bat`** one folder up (or the desktop shortcut it creates).
+Start the app with **`MeetingNoteTaker.exe`** one folder up. Keep this folder next to it.
 
 - Documentation: [README](../README.md) · [Installation](../docs/INSTALL.md) · [User guide](../docs/USER_GUIDE.md) · [Troubleshooting](../docs/TROUBLESHOOTING.md)
 - What changed: [CHANGELOG](../CHANGELOG.md)
 
-Your recordings are saved in `meetings/` and voice profiles in `voices/` inside this folder. Both are excluded from git.
+Contents:
+- `runtime/`: the bundled Python and libraries.
+- `meetings/`: your recordings.
+- `voices/`: voice profiles.
+
+None of these are in git.

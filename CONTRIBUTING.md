@@ -12,20 +12,22 @@ Thanks for helping improve Meeting Note-Taker!
 
 ## Development setup
 
+You need Python 3.11 (64-bit).
+
 ```powershell
 git clone https://github.com/swainamar/MeetingNoteTaker.git
 ```
 ```powershell
-cd MeetingNoteTaker\MeetingNoteTaker
+cd MeetingNoteTaker
 ```
 ```powershell
-python -m pip install -r requirements.txt
-```
-```powershell
-python app.py
+powershell -ExecutionPolicy Bypass -File build\build.ps1
 ```
 
-`Debug Meeting Note-Taker.bat` runs the app with a console window so you can see messages.
+This builds the portable app in place: the `MeetingNoteTaker\runtime` folder and `MeetingNoteTaker.exe`. Then:
+- **Run the app:** start `MeetingNoteTaker.exe`.
+- **See its messages:** use `MeetingNoteTaker\Debug Meeting Note-Taker.bat`, which runs it with a console window.
+- **Make the release ZIP:** run `build\build.ps1 -Package`. It creates `dist\MeetingNoteTaker-<version>-win64.zip`.
 
 ## Project layout
 
@@ -40,6 +42,7 @@ python app.py
 | `enterprise.py` | Meeting metadata, retention, action items, export, audit log, Outlook |
 | `ui_dialogs.py` / `theme.py` | Settings and Meetings pages, styling and high-DPI |
 | `settings.py` | Defaults, settings file, Windows helpers |
+| `build/launcher.cs` / `build/build.ps1` | `MeetingNoteTaker.exe` (runs the bundled Python in-process) and the portable build |
 
 ## Pull requests
 

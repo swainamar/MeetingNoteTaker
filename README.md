@@ -8,7 +8,7 @@
 
 [![Platform](https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-0078D4?logo=windows)](#requirements)
 [![Python](https://img.shields.io/badge/python-3.11-3776AB?logo=python&logoColor=white)](https://www.python.org/downloads/windows/)
-[![Version](https://img.shields.io/badge/version-2.1-2563EB)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-2.2-2563EB)](CHANGELOG.md)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 [Quick start](#quick-start) · [Features](#features) · [User guide](docs/USER_GUIDE.md) · [Troubleshooting](docs/TROUBLESHOOTING.md) · [Changelog](CHANGELOG.md)
@@ -58,25 +58,27 @@
 
 ## Quick start
 
-1. **Install Python 3.11** from [python.org](https://www.python.org/downloads/windows/) and tick **"Add Python to PATH"**.
-2. **Download this repository.** Click **Code → Download ZIP** and unzip it to a private folder, for example `C:\Users\<you>\MeetingNoteTaker`. Or clone it:
-   ```powershell
-   git clone https://github.com/swainamar/MeetingNoteTaker.git
-   ```
-3. **Double-click `Meeting Note-Taker.bat`.** The first start installs the components, which takes a few minutes once. It also creates a **Meeting Note-Taker** shortcut on your Desktop and in the Start menu.
-4. Open **Settings** in the app. Set your name, then choose your languages and whether calls should be recorded automatically.
+**Portable: no installation, no admin rights, no Python, no NVIDIA card needed.**
 
-The [Installation guide](docs/INSTALL.md) covers GPU acceleration, Odia/Indian languages, AI notes and screen recording.
+1. **Download** `MeetingNoteTaker-2.2-win64.zip` (164 MB) from **[Releases](https://github.com/swainamar/MeetingNoteTaker/releases/latest)**.
+2. **Extract it** to a folder of your own, for example `Documents\Meeting Note-Taker`. Right-click the ZIP and choose **Extract All**.
+3. **Double-click `MeetingNoteTaker.exe`.**
+4. **Keep it handy.** Right-click `MeetingNoteTaker.exe` and choose **Pin to taskbar** or **Pin to Start**. For a desktop icon, choose **Show more options → Send to → Desktop (create shortcut)**. Once pinned, it works like Word or Excel.
+
+On first use the app downloads the speech model once (about 480 MB on a normal PC), then works offline. If Windows shows *"Windows protected your PC"*, click **More info → Run anyway**. The app is not code-signed.
+
+The [Installation guide](docs/INSTALL.md) covers GPU acceleration, Odia/Indian languages, AI notes and running from source.
 
 ## Requirements
 
 | | Minimum | Recommended |
 |---|---|---|
 | OS | Windows 10 (64-bit) | Windows 11 |
-| Python | 3.11 | 3.11 |
+| Admin rights | Not needed | — |
+| Python | Not needed (bundled) | — |
 | RAM | 8 GB | 16 GB |
-| GPU | Not needed | NVIDIA GPU, used automatically for faster transcription |
-| Disk | ~3 GB (packages + Whisper and speaker models) | +5 GB for Odia/Indian languages, plus recordings: audio ~230 MB/hour, video ~100–300 MB/hour |
+| GPU | Not needed (runs on the CPU) | NVIDIA GPU with the free *GPU support* add-on, for faster transcription |
+| Disk | ~1 GB (app 484 MB + speech model ~480 MB) | +5 GB for Odia/Indian languages, plus recordings: audio ~230 MB/hour, video ~100–300 MB/hour |
 
 ## How it works
 

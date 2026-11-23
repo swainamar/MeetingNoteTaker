@@ -2,6 +2,22 @@
 
 All notable changes to Meeting Note-Taker.
 
+## [2.2] - 2026-11-23
+
+### Added
+- **Portable app.** `MeetingNoteTaker.exe` with the app logo replaces `Meeting Note-Taker.bat`.
+  - Extract the ZIP and run it: no installation, no admin rights, no Python, no NVIDIA card needed.
+  - Pin it to the taskbar or Start, or make a desktop shortcut, like any other program. The pinned icon and the window share one taskbar button.
+- `Install GPU support (NVIDIA).bat`: an optional add-on that installs into the app folder.
+- `build/build.ps1` builds the runtime, the exe and the release ZIP.
+
+### Changed
+- The Odia add-on now installs into the bundled runtime.
+- Desktop, Start-menu and Startup shortcuts now point to `MeetingNoteTaker.exe`.
+
+### Removed
+- `Meeting Note-Taker.bat` and `Install.bat`. The first-start installation is no longer needed.
+
 ## [2.1] - 2026-11-21
 
 ### Added (repository release)

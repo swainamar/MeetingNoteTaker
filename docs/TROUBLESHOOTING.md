@@ -4,20 +4,22 @@
 
 To see detailed messages, start `MeetingNoteTaker\Debug Meeting Note-Taker.bat`, which opens a console window. Or open `MeetingNoteTaker\meetings\notetaker.log`.
 
-## Installation
+## Starting the app
 
-**"Python 3.11 is not installed or not on the PATH"**
-Reinstall Python 3.11 and tick **Add python.exe to PATH**. Then open a new PowerShell window and check:
+**"Windows protected your PC"**
+The exe is not code-signed. Click **More info → Run anyway**; you only need to do this once. Your company may block unsigned programs; if so, ask IT to allow `MeetingNoteTaker.exe`.
 
-```powershell
-python --version
-```
+**"The MeetingNoteTaker folder must stay next to MeetingNoteTaker.exe"**
+You started the exe from inside the ZIP, or moved it on its own. Extract the whole ZIP (**Extract All**) and start the exe from the extracted folder. To have it elsewhere, pin it or make a shortcut instead of moving it.
 
-**Setup did not finish / pip errors**
-Check your internet connection or proxy, then run `MeetingNoteTaker\Install.bat` by hand to see the full error.
+**"The bundled Python runtime is missing"**
+`MeetingNoteTaker\runtime` was not extracted, or an antivirus removed files. Extract the ZIP again.
 
-**I want to run the first-time setup again**
-Delete `MeetingNoteTaker\.installed`. To recreate the shortcuts, also delete `.shortcuts_created`. Then start `Meeting Note-Taker.bat` again.
+**"Could not load the Python runtime"**
+Very rare on Windows 10/11. Install the *Microsoft Visual C++ Redistributable (x64)* from Microsoft, then try again.
+
+**Two taskbar icons after pinning**
+Pin `MeetingNoteTaker.exe` itself, or a shortcut to it, not an old shortcut to `pythonw.exe` from version 2.0 or earlier. Unpin the old one.
 
 ## Recording
 
@@ -39,7 +41,7 @@ Whisper has no Odia model. Install the Indic add-on (see [Installation → Odia]
 Accept the model terms on Hugging Face and set `HF_TOKEN`, or opt in to the pinned mirror with `INDIC_ASR_ALLOW_MIRROR=1`. Restart the app after `setx`.
 
 **Transcription is slow**
-On an NVIDIA PC, run `Install.bat` again to add the GPU libraries. Without a GPU, choose a smaller Whisper model (**small** or **base**) in **Settings → Audio & AI**.
+On an NVIDIA PC, run `MeetingNoteTaker\Install GPU support (NVIDIA).bat` once. Without a GPU, choose a smaller Whisper model (**base** or **tiny**) in **Settings → Audio & AI**.
 
 **Names or terms are misspelled**
 Add them to **Settings → Glossary & Templates → Glossary**.
@@ -55,7 +57,7 @@ Enter the exact number of **Expected other speakers** for that meeting, then use
 ## Screen recording
 
 **"Screen recording needs FFmpeg"**
-Run `MeetingNoteTaker\Install.bat` (it installs `imageio-ffmpeg`), or install FFmpeg with:
+FFmpeg is part of the portable ZIP, so extract the ZIP again. Or install FFmpeg with:
 
 ```powershell
 winget install --id Gyan.FFmpeg -e
